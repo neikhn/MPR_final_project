@@ -11,9 +11,9 @@ const LabelTag = ({ text, backgroundColor, textColor, onPress, isPressable }) =>
 };
 
 LabelTag.propTypes = {
-    text: PropTypes.string.isRequired,
-    backgroundColor: PropTypes.string.isRequired,
-    textColor: PropTypes.string.isRequired,
+    text: PropTypes.string,
+    backgroundColor: PropTypes.string,
+    textColor: PropTypes.string,
     onPress: PropTypes.func,
     isPressable: PropTypes.bool,
 };
