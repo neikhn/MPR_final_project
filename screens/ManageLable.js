@@ -1,3 +1,5 @@
+//search function hiện chỉ add chứ ko search đc
+
 import { StyleSheet, Pressable, View, Text, Modal, TextInput, AppRegistry, ScrollView } from "react-native";
 import React, { useState } from "react";
 import Icon from 'react-native-vector-icons/Ionicons';
