@@ -10,12 +10,12 @@ const LabelTag = ({ text, backgroundColor, textColor, onPress, isPressable }) =>
     );
 };
 
-LabelTagPressable.propTypes = {
+LabelTag.propTypes = {
     text: PropTypes.string.isRequired,
     backgroundColor: PropTypes.string.isRequired,
     textColor: PropTypes.string.isRequired,
     onPress: PropTypes.func,
-    isPressable: PropTypes.bool.isRequired,
+    isPressable: PropTypes.bool,
 };
 
 const styles = StyleSheet.create({
