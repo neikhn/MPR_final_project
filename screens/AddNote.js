@@ -1,6 +1,7 @@
-import { StyleSheet, Pressable, View, Text, Modal, TextInput, AppRegistry } from "react-native";
+import { StyleSheet, Pressable, View, Text, Modal, TextInput, AppRegistry, ScrollView } from "react-native";
 import React, { useState } from "react";
 import Icon from 'react-native-vector-icons/Ionicons';
+import TextScrollView from "../components/TextScrollView";
 
 const AddNote = () => {
     const [drawerVisible, setDrawerVisible] = useState(false);
@@ -30,16 +31,7 @@ const AddNote = () => {
             </View>
 
 
-            <View style={styles.noteContentContainer}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setText}
-                    value={text}
-                    multiline={true}
-                    numberOfLines={30}
-                    placeholder="Enter text"
-                />
-            </View>
+            <TextScrollView/>
 
             <View style={styles.addNoteButton}>
                 <Icon style={styles.addNoteIcon} name="checkmark-outline"></Icon>
@@ -47,7 +39,6 @@ const AddNote = () => {
 
             <Modal
                 visible={drawerVisible}
-                onRequestClose={() => setDrawerVisible(false)}
                 animationType="fade"
                 transparent={true}
             >
@@ -136,6 +127,7 @@ const styles = StyleSheet.create({
         right: 0,
         zIndex: 1,
         marginLeft: 0,
+        marginTop: 30,
     },
     navButton: {
         paddingVertical: 10,
@@ -198,24 +190,6 @@ const styles = StyleSheet.create({
     addNoteIcon: {
         color: "#fff",
         fontSize: 30,
-    },
-    noteContentContainer: {
-        padding: 20,
-        marginRight: 10,
-        marginLeft: 10,
-        marginTop: 80,
-        width: 380,
-        height: "auto",
-    },
-    input: {
-        height: 40,
-        padding: 8,
-        width: '100%',
-        height: 500,
-        textAlignVertical: "top",
-        fontSize: 16,
-        backgroundColor: "#d9d9d9",
-        borderRadius: 10,
     },
 });
 

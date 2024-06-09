@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import LabelTag from "../components/LabelTag.js";
 import BottomPressable from "../components/bottomModelPressable.js";
 import BottomModalColor from "../components/bottomModalColor.js";
+import TextScrollView from "../components/TextScrollView.js";
 
 const EditNote = () => {
     const [drawerVisible, setDrawerVisible] = useState(false);
@@ -62,16 +63,7 @@ const EditNote = () => {
                 <LabelTag text="Personal" backgroundColor="#2483f2" textColor="#fff" />
             </View>
 
-            <ScrollView style={styles.noteContentContainer}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setText}
-                    value={text}
-                    multiline={true}
-                    numberOfLines={30}
-                    placeholder="Enter text..."
-                />
-            </ScrollView>
+            <TextScrollView/>
 
             <View style={styles.bottomTabMenu}>
                 <Text style={styles.bottomText}>Edited 11 Hours ago</Text>
@@ -191,18 +183,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
-        marginBottom: 0,
         marginTop: 25,
         marginLeft: 15,
         paddingHorizontal: 10,
-    },
-    noteContentContainer: {
-        padding: 20,
-        marginRight: 10,
-        marginLeft: 10,
-        marginTop: 10,
-        width: 380,
-        height: "auto",
     },
     input: {
         padding: 8,
