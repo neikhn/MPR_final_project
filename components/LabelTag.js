@@ -1,34 +1,61 @@
 import React from 'react';
-import {Text, StyleSheet, Pressable } from 'react-native';
-import PropTypes from 'prop-types'; // Optional, for prop type validation
+import { Text, StyleSheet, Pressable, View } from "react-native";
+import PropTypes from "prop-types";
 
-const LabelTag = ({ text, backgroundColor, textColor, onPress, isPressable }) => {
-    return (
-        <Pressable onPress={onPress} style={[styles.tag, { backgroundColor }]}>
-            <Text style={[styles.text, { color: textColor }]}>{text}</Text>
-        </Pressable>
-    );
+const LabelTag = ({ label, isPressable, onPress }) => {
+  if (!label) return null; // Handle cases where label is not found
+
+  return isPressable ? (
+    <Pressable onPress={onPress} style={styles.tag}>
+      <Text style={styles.text}>{label.label}</Text>
+    </Pressable>
+  ) : (
+    <View style={styles.tag}>
+      <Text style={styles.text}>{label.label}</Text>
+    </View>
+  );
 };
 
 LabelTag.propTypes = {
-    text: PropTypes.string,
-    backgroundColor: PropTypes.string,
-    textColor: PropTypes.string,
-    onPress: PropTypes.func,
-    isPressable: PropTypes.bool,
+  label: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+  }).isRequired,
+  onPress: PropTypes.func,
+  isPressable: PropTypes.bool,
+};
+
+LabelTag.defaultProps = {
+  isPressable: false,
 };
 
 const styles = StyleSheet.create({
-    tag: {
-        padding: 10,
-        borderRadius: 5,
-        flexWrap: "wrap",
-        margin: 5,
-        alignSelf: 'flex-start',
-    },
-    text: {
-        fontSize: 12,
-    },
+  tag: {
+    padding: 5,
+    borderRadius: 5,
+    flexWrap: "wrap",
+    margin: 5,
+    alignSelf: "flex-start",
+    backgroundColor: '#ddd', // Add background color for visibility
+  },
+  text: {
+    fontSize: 12,
+    color: 'grey'
+  },
 });
 
 export default LabelTag;
+
+// const LabelTag = ({
+//   text,
+//   backgroundColor,
+//   textColor,
+//   onPress,
+//   isPressable,
+// }) => {
+//   return (
+//     <Pressable onPress={onPress} style={[styles.tag, { backgroundColor }]}>
+//       <Text style={[styles.text, { color: textColor }]}>{text}</Text>
+//     </Pressable>
+//   );
+// };

@@ -19,3 +19,5 @@ const styles = StyleSheet.create({
         color: "#0763f2",
     },
 });
+
+export default styles;
