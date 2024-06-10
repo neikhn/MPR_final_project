@@ -51,9 +51,12 @@ const styles = StyleSheet.create({
   noteTime: {
     fontSize: 12,
     color: "gray",
+    marginBottom: 5
   },
   labelContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 5,
     marginLeft: -5,
   }
 });
