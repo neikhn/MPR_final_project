@@ -90,8 +90,8 @@ const Label = () => {
                     <LabelTag
                         key={label.button}
                         text={label.text}
-                        backgroundColor={isButtonPressed(label.button) ? "#9bb9e8" : null}
-                        textColor={isButtonPressed(label.button) ? "#000" : null}
+                        backgroundColor="#0763f2"
+                        textColor="#fff"
                         onPress={() => handleLabelPress(label)}
                     />
                 ))}
