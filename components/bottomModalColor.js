@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
-const BottomModalColor = ({ onPress, backgroundColor }) => {
+const BottomModalColor = ({ onPress = () => {}, backgroundColor = '#000' }) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View
@@ -24,11 +24,6 @@ const styles = StyleSheet.create({
 BottomModalColor.propTypes = {
     onPress: PropTypes.func,
     backgroundColor: PropTypes.string,
-};
-
-BottomModalColor.defaultProps = {
-    onPress: () => {},
-    backgroundColor: '#000', // Default color if none is provided
 };
 
 export default BottomModalColor;
