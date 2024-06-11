@@ -1,16 +1,15 @@
-import React from 'react';
 import { Text, StyleSheet, Pressable, View } from "react-native";
 import PropTypes from "prop-types";
 
 const LabelTag = ({ label, isPressable, onPress }) => {
-  if (!label) return null; // Handle cases where label is not found
-
   return isPressable ? (
-    <Pressable onPress={onPress} style={styles.tag}>
+    <Pressable
+      onPress={onPress}
+      style={styles.container}>
       <Text style={styles.text}>{label.label}</Text>
     </Pressable>
   ) : (
-    <View style={styles.tag}>
+    <View style={styles.container}>
       <Text style={styles.text}>{label.label}</Text>
     </View>
   );
@@ -25,18 +24,13 @@ LabelTag.propTypes = {
   isPressable: PropTypes.bool,
 };
 
-LabelTag.defaultProps = {
-  isPressable: false,
-};
-
 const styles = StyleSheet.create({
-  tag: {
-    padding: 5,
+  container: {
+    backgroundColor: "#d9d9d9",
+    padding: 10,
     borderRadius: 5,
     flexWrap: "wrap",
     margin: 5,
-    alignSelf: "flex-start",
-    backgroundColor: '#ddd', // Add background color for visibility
   },
   text: {
     fontSize: 12,
@@ -45,17 +39,3 @@ const styles = StyleSheet.create({
 });
 
 export default LabelTag;
-
-// const LabelTag = ({
-//   text,
-//   backgroundColor,
-//   textColor,
-//   onPress,
-//   isPressable,
-// }) => {
-//   return (
-//     <Pressable onPress={onPress} style={[styles.tag, { backgroundColor }]}>
-//       <Text style={[styles.text, { color: textColor }]}>{text}</Text>
-//     </Pressable>
-//   );
-// };

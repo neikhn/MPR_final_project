@@ -1,31 +1,22 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { formatDistanceToNow } from "date-fns";
-import { LABELS } from "../data/dummy-data";
-import LabelTag from "./LabelTag";
+import LabelContainer from './LabelContainer';
 
-export default function NoteContainer({ item }) {
-  function findLabelById(id) {
-    return LABELS.find(label => label.id === id);
-  }
-
+export default function NoteContainer({ note, onPress }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.noteTime}>
-        {formatDistanceToNow(new Date(item.updateAt), { addSuffix: true })}
-      </Text>
-      <View style={styles.labelContainer}>
-        {item.labelIds.map(labelId => {
-          const label = findLabelById(labelId);
-          return (
-            <LabelTag 
-              key={labelId}
-              label={label}
-              isPressable={false}
-            />
-          );
-        })}
-      </View>
-      <Text style={styles.noteContent}>{item.content}</Text>
+      <Pressable
+        style={({ pressed }) => [
+          pressed ? styles.notePressed : null,
+        ]}
+        onPress={onPress}
+      >
+        <Text style={styles.noteTime}>
+          {formatDistanceToNow(new Date(note.updateAt), { addSuffix: true })}
+        </Text>
+        <LabelContainer note={note}/>
+        <Text style={styles.noteContent}>{note.content}</Text>
+      </Pressable>
     </View>
   );
 }
@@ -45,18 +36,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   noteContent: {
-    color: 'black',
+    color: "black",
     fontSize: 16,
   },
   noteTime: {
     fontSize: 12,
     color: "gray",
-    marginBottom: 5
-  },
-  labelContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     marginBottom: 5,
-    marginLeft: -5,
-  }
+  },
+  notePressed: {
+    opacity: 0.5,
+  },
 });
