@@ -81,18 +81,3 @@ export let TRASH = [
     false
   ),
 ];
-
-export function createLabel(label) {
-  LABELS.push(label);
-}
-
-export function updateLabel(labelId, newLabel) {
-  const index = LABELS.findIndex(label => label.id === labelId);
-  if (index !== -1) {
-    LABELS[index] = newLabel;
-  }
-}
-
-export function deleteLabel(labelId) {
-  LABELS = LABELS.filter(label => label.id !== labelId);
-}
