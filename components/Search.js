@@ -6,7 +6,7 @@ const Search = ({ labels, onSearch, onCreateLabel }) => {
 
     const handleSearch = () => {
         const filteredLabels = labels.filter((label) =>
-            label.text.toLowerCase().includes(searchTerm.toLowerCase())
+            label.label.toLowerCase().includes(searchTerm.toLowerCase())
         );
         onSearch(filteredLabels);
     };
