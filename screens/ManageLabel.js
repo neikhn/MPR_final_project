@@ -1,33 +1,37 @@
-import { StyleSheet, Pressable, View, Text, Modal, TextInput, AppRegistry, ScrollView } from "react-native";
+import { StyleSheet, View, AppRegistry } from "react-native";
 import React, { useState } from "react";
-import Icon from 'react-native-vector-icons/Ionicons';
 import Search from "../components/Search";
 import LabelTag from "../components/LabelTag";
+import { LABELS, NOTES, TRASH } from "../data/dummy-data";
 
 const ManageLabel = () => {
-    const [drawerVisible, setDrawerVisible] = useState(false);
+    const [labels, setLabel] = useState(LABELS);
+    const [notes, setNote] = useState(NOTES);
+    const [trash, setTrash] = useState(TRASH);
     const [pressedButton, setPressedButton] = useState(null);
-    const [labels, setLabels] = useState([
-        { text: "Personal", button: "Personal" },
-        { text: "Work", button: "Work" },
-        { text: "Work1", button: "Work1" },
-    ]);
     const [filteredLabels, setFilteredLabels] = useState(labels);
 
-    const handlePressIn = (button) => {
-        setPressedButton(button);
+    const handlePressIn = (labelId) => {
+        setPressedButton(prev => (prev === labelId ? null : labelId));
     };
 
     const handlePressOut = () => {
         setPressedButton(null);
     };
 
-    const isButtonPressed = (button) => pressedButton === button;
+    const handleLabelPress = (label) => {
+        setPressedButton(prev => (prev === label.id ? null : label.id));
+    };
 
-    const handleCreateLabel = (text) => {
-        const newLabel = { text: text, button: text };
-        setLabels([...labels, newLabel]);
-        setFilteredLabels([...filteredLabels, newLabel]);
+    const handleCreateLabel = (label) => {
+        const newLabel = { id: `l${labels.length + 1}`, label: label, button: label };
+        const updatedLabels = [...labels, newLabel];
+        setLabel(updatedLabels);
+        setFilteredLabels(updatedLabels);
+    
+        // Update the dummy data
+        const updatedDummyLabels = [...LABELS, newLabel];
+        LABELS = updatedDummyLabels;
     };
 
     const handleSearch = (filteredLabels) => {
@@ -36,36 +40,18 @@ const ManageLabel = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.navBar}>
-                <Pressable
-                    style={[styles.navButton, isButtonPressed('Menu') && styles.navButtonPressed]}
-                    onPress={() => {
-                        if (isButtonPressed('Menu')) {
-                            handlePressOut();
-                        } else {
-                            handlePressIn('Menu');
-                        }
-                    }}
-                >
-                    <Text style={styles.navButtonText}>Menu</Text>
-                </Pressable>
-            </View>
             <Search labels={labels} onSearch={handleSearch} onCreateLabel={handleCreateLabel} />
             <View style={styles.labelList}>
-                {filteredLabels.map((label) => (
-                    <LabelTag
-                        key={label.button}
-                        text={label.text}
-                        backgroundColor={isButtonPressed(label.button) ? '#0763f2' : '#d9d9d9'}
-                        textColor={isButtonPressed(label.button) ? '#fff' : '#000'}
-                        onPress={() => {
-                            if (isButtonPressed(label.button)) {
-                                handlePressOut();
-                            } else {
-                                handlePressIn(label.button);
-                            }
-                        }}
-                    />
+                {filteredLabels.map(label => (
+                    <View key={label.id} style={{ opacity: pressedButton === label.id ? 0.7 : 1 }}>
+                        <LabelTag
+                            label={label}
+                            isPressable={true}
+                            onPressIn={() => handlePressIn(label.id)}
+                            onPressOut={handlePressOut}
+                            onPress={() => handleLabelPress(label)}
+                        />
+                    </View>
                 ))}
             </View>
         </View>
@@ -111,7 +97,6 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         padding: 5,
     },
-
 });
 
 AppRegistry.registerComponent('main', () => ManageLabel);

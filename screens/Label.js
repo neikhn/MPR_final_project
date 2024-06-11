@@ -1,18 +1,17 @@
 import { StyleSheet, Pressable, View, Text, Modal, TextInput, AppRegistry } from "react-native";
-import React, { useState } from "react";
+import { useState } from "react";
 import Search from "../components/Search";
 import LabelTag from "../components/LabelTag";
+import { LABELS, NOTES, TRASH } from "../data/dummy-data";
 
 const Label = () => {
+    const [labels, setLabel] = useState(LABELS);
+    const [notes, setNote] = useState(NOTES);
+    const [trash, setTrash] = useState(TRASH);
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [pressedButton, setPressedButton] = useState(null);
     const [popUpModalVisible, setPopUpModalVisible] = useState(false);
-    const [labels, setLabels] = useState([
-        { text: "Personal", button: "Personal" },
-        { text: "Work", button: "Work" },
-        { text: "Work1", button: "Work1" },
-    ]);
-    const [filteredLabels, setFilteredLabels] = useState(labels);
+    const [filteredLabels, setFilteredLabels] = useState(LABELS);
     const [tempLabelText, setTempLabelText] = useState('');
 
     const handlePressIn = (button) => {
@@ -26,41 +25,97 @@ const Label = () => {
     const isButtonPressed = (button) => pressedButton === button;
 
     const handleLabelPress = (label) => {
-        setPressedButton(label.button);
-        setTempLabelText(label.text);
+        setPressedButton(label.id);
+        setTempLabelText(label.label);
         setPopUpModalVisible(true);
     };
 
     const handleSaveLabel = () => {
-        setLabels((prevLabels) =>
-            prevLabels.map((label) =>
-                label.button === pressedButton ? { ...label, text: tempLabelText } : label
-            )
+        // Update the labels state variable and filteredLabels
+        const updatedLabels = labels.map(label =>
+            label.id === pressedButton ? { ...label, label: tempLabelText } : label
         );
-        setFilteredLabels((prevLabels) =>
-            prevLabels.map((label) =>
-                label.button === pressedButton ? { ...label, text: tempLabelText } : label
-            )
+        setLabel(updatedLabels);
+        setFilteredLabels(updatedLabels);
+    
+        // Update notes and trash with the edited label
+        const updatedNotes = notes.map(note => ({
+            ...note,
+            labelIds: note.labelIds.includes(pressedButton) ? note.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId) : note.labelIds,
+        }));
+        setNote(updatedNotes);
+    
+        const updatedTrash = trash.map(item => ({
+            ...item,
+            labelIds: item.labelIds.includes(pressedButton) ? item.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId) : item.labelIds,
+        }));
+        setTrash(updatedTrash);
+    
+        // Update the dummy data
+        const updatedDummyLabels = LABELS.map(label =>
+            label.id === pressedButton ? { ...label, label: tempLabelText } : label
         );
+        const updatedDummyNotes = NOTES.map(note => ({
+            ...note,
+            labelIds: note.labelIds.includes(pressedButton) ? note.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId) : note.labelIds,
+        }));
+        const updatedDummyTrash = TRASH.map(item => ({
+            ...item,
+            labelIds: item.labelIds.includes(pressedButton) ? item.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId) : item.labelIds,
+        }));
+        // Update the dummy data
+        LABELS = updatedDummyLabels;
+        NOTES = updatedDummyNotes;
+        TRASH = updatedDummyTrash;
+    
         setPopUpModalVisible(false);
         setPressedButton(null);
     };
 
     const handleDeleteLabel = () => {
-        setLabels((prevLabels) =>
-            prevLabels.filter((label) => label.button !== pressedButton)
-        );
-        setFilteredLabels((prevLabels) =>
-            prevLabels.filter((label) => label.button !== pressedButton)
-        );
-        setPopUpModalVisible(false);
-        setPressedButton(null);
+        // Update the labels state variable and filteredLabels
+        const updatedLabels = labels.filter(label => label.id !== pressedButton);
+        setLabel(updatedLabels);
+        setFilteredLabels(updatedLabels);
+    
+        // Remove the label from notes and trash
+        const updatedNotes = notes.map(note => ({
+            ...note,
+            labelIDs: note.labelIds.filter(labelId => labelId !== pressedButton),
+        }));
+        setNote(updatedNotes);
+    
+        const updatedTrash = trash.map(item => ({
+            ...item,
+            labelIDs: item.labelIds.filter(labelId => labelId !== pressedButton),
+        }));
+        setTrash(updatedTrash);
+    
+        // Update the dummy data
+        const updatedDummyLabels = LABELS.filter(label => label.id !== pressedButton);
+        const updatedDummyNotes = NOTES.map(note => ({
+            ...note,
+            labelIds: note.labelIds.filter(labelId => labelId !== pressedButton),
+        }));
+        const updatedDummyTrash = TRASH.map(item => ({
+            ...item,
+            labelIds: item.labelIds.filter(labelId => labelId !== pressedButton),
+        }));
+        // Update the dummy data
+        LABELS = updatedDummyLabels;
+        NOTES = updatedDummyNotes;
+        TRASH = updatedDummyTrash;
     };
 
-    const handleCreateLabel = (text) => {
-        const newLabel = { text: text, button: text };
-        setLabels([...labels, newLabel]);
-        setFilteredLabels([...filteredLabels, newLabel]);
+    const handleCreateLabel = (label) => {
+        const newLabel = { id: `l${labels.length + 1}`, label: label, button: label };
+        const updatedLabels = [...labels, newLabel];
+        setLabel(updatedLabels);
+        setFilteredLabels(updatedLabels);
+    
+        // Update the dummy data
+        const updatedDummyLabels = [...LABELS, newLabel];
+        LABELS = updatedDummyLabels;
     };
 
     const handleSearch = (filteredLabels) => {
@@ -86,12 +141,11 @@ const Label = () => {
             <Search labels={labels} onSearch={handleSearch} onCreateLabel={handleCreateLabel} />
 
             <View style={styles.labelList}>
-                {filteredLabels.map((label) => (
+                {filteredLabels.map(label => (
                     <LabelTag
-                        key={label.button}
-                        text={label.text}
-                        backgroundColor="#0763f2"
-                        textColor="#fff"
+                        key={label.id}
+                        label={label}
+                        isPressable={true}
                         onPress={() => handleLabelPress(label)}
                     />
                 ))}
