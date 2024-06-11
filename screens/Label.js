@@ -37,20 +37,20 @@ const Label = () => {
         );
         setLabel(updatedLabels);
         setFilteredLabels(updatedLabels);
-    
+
         // Update notes and trash with the edited label
         const updatedNotes = notes.map(note => ({
             ...note,
             labelIds: note.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId)
         }));
         setNote(updatedNotes);
-    
+
         const updatedTrash = trash.map(item => ({
             ...item,
             labelIds: item.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId)
         }));
         setTrash(updatedTrash);
-    
+
         setPopUpModalVisible(false);
         setPressedButton(null);
     };
@@ -60,34 +60,54 @@ const Label = () => {
         const updatedLabels = labels.filter(label => label.id !== pressedButton);
         setLabel(updatedLabels);
         setFilteredLabels(updatedLabels);
-    
+
         // Remove the label from notes and trash
         const updatedNotes = notes.map(note => ({
             ...note,
             labelIds: note.labelIds.filter(labelId => labelId !== pressedButton)
         }));
         setNote(updatedNotes);
-    
+
         const updatedTrash = trash.map(item => ({
             ...item,
             labelIds: item.labelIds.filter(labelId => labelId !== pressedButton)
         }));
         setTrash(updatedTrash);
-    
+
         setPopUpModalVisible(false);
         setPressedButton(null);
     };
 
     const handleCreateLabel = (label) => {
-        const newLabel = { id: `l${labels.length + 1}`, label: label};
+        if (!label.trim()) {
+            // If the label is empty, return without creating a new label
+            return;
+        }
+        
+        // Find the maximum ID among existing labels
+        const maxId = labels.reduce((max, existingLabel) => {
+            // Check if the existing label has a valid id property
+            if (existingLabel.id && typeof existingLabel.id === 'string') {
+                const labelIdNumber = parseInt(existingLabel.id.substring(1));
+                return labelIdNumber > max ? labelIdNumber : max;
+            }
+            return max;
+        }, 0);
+    
+        // Generate a new label ID based on the maximum ID
+        const newId = `l${maxId + 1}`;
+    
+        const newLabel = { id: newId, label: label };
         const updatedLabels = [...labels, newLabel];
+        
+        // Update the state variable for both screens
         setLabel(updatedLabels);
         setFilteredLabels(updatedLabels);
-        
+    
         // Update the dummy data
-        LABELS.push(label);
+        LABELS.push(newLabel);
     };
-
+    
     const handleSearch = (filteredLabels) => {
         setFilteredLabels(filteredLabels);
     };

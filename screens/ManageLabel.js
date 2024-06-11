@@ -8,31 +8,57 @@ const ManageLabel = () => {
     const [labels, setLabel] = useState(LABELS);
     const [notes, setNote] = useState(NOTES);
     const [trash, setTrash] = useState(TRASH);
-    const [pressedButton, setPressedButton] = useState(null);
     const [filteredLabels, setFilteredLabels] = useState(labels);
+    const [selectedLabels, setSelectedLabels] = useState([]);
 
-    const handlePressIn = (labelId) => {
-        setPressedButton(prev => (prev === labelId ? null : labelId));
+
+    const handleToggleLabel = (labelId) => {
+        setSelectedLabels(prevSelected => {
+            if (prevSelected.includes(labelId)) {
+                // If label is already selected, remove it
+                return prevSelected.filter(id => id !== labelId);
+            } else {
+                // If label is not selected, add it
+                return [...prevSelected, labelId];
+            }
+        });
     };
 
-    const handlePressOut = () => {
-        setPressedButton(null);
-    };
-
-    const handleLabelPress = (label) => {
-        setPressedButton(prev => (prev === label.id ? null : label.id));
+    const isLabelSelected = (labelId) => {
+        return selectedLabels.includes(labelId);
     };
 
     const handleCreateLabel = (label) => {
-        const newLabel = { id: `l${labels.length + 1}`, label: label};
+        // Check if the label is empty or consists only of whitespace
+        if (!label.trim()) {
+            // If the label is empty, return without creating a new label
+            return;
+        }
+                
+        // Find the maximum ID among existing labels
+        const maxId = labels.reduce((max, existingLabel) => {
+            // Check if the existing label has a valid id property
+            if (existingLabel.id && typeof existingLabel.id === 'string') {
+                const labelIdNumber = parseInt(existingLabel.id.substring(1));
+                return labelIdNumber > max ? labelIdNumber : max;
+            }
+            return max;
+        }, 0);
+    
+        // Generate a new label ID based on the maximum ID
+        const newId = `l${maxId + 1}`;
+    
+        const newLabel = { id: newId, label: label };
         const updatedLabels = [...labels, newLabel];
+        
+        // Update the state variable for both screens
         setLabel(updatedLabels);
         setFilteredLabels(updatedLabels);
-        
+    
         // Update the dummy data
-        LABELS.push(label);
+        LABELS.push(newLabel);
     };
-
+    
     const handleSearch = (filteredLabels) => {
         setFilteredLabels(filteredLabels);
     };
@@ -42,13 +68,11 @@ const ManageLabel = () => {
             <Search labels={labels} onSearch={handleSearch} onCreateLabel={handleCreateLabel} />
             <View style={styles.labelList}>
                 {filteredLabels.map(label => (
-                    <View key={label.id} style={{ opacity: pressedButton === label.id ? 0.7 : 1 }}>
+                    <View key={label.id} style={{ opacity: isLabelSelected(label.id) ? 0.7 : 1 }}>
                         <LabelTag
                             label={label}
                             isPressable={true}
-                            onPressIn={() => handlePressIn(label.id)}
-                            onPressOut={handlePressOut}
-                            onPress={() => handleLabelPress(label)}
+                            onPress={() => handleToggleLabel(label.id)}
                         />
                     </View>
                 ))}
