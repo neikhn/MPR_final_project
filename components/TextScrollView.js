@@ -1,26 +1,31 @@
 import { useEffect, useState } from "react";
-import { ScrollView, TextInput, StyleSheet, Text } from "react-native";
+import { ScrollView, TextInput, StyleSheet } from "react-native";
 
-export default function TextScrollView({ content }) {
-  const [text, setText] = useState("");
+export default function TextScrollView({ content, onContentChange }) {
+  const [text, setText] = useState(content);
 
-  useEffect(() => setText(content), []);
+  useEffect(() => {
+    setText(content);
+  }, [content]);
+
+  const handleChangeText = (newText) => {
+    setText(newText);
+    onContentChange(newText);
+  };
 
   return (
     <ScrollView style={styles.noteContentContainer}>
       <TextInput
-        style={[
-          styles.inputContainer, styles.inputText
-        ]} 
-        onChangeText={setText}
+        style={[styles.inputContainer, styles.inputText]}
+        onChangeText={handleChangeText}
         value={text}
-        multiline={true}
+        multiline
         numberOfLines={500}
         placeholder="Enter text.."
-      ></TextInput>
+      />
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   noteContentContainer: {
@@ -39,4 +44,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   }
 });
-

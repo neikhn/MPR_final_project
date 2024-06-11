@@ -24,7 +24,7 @@ export default function ActionButton({ type, onPress }) {
 }
 
 ActionButton.prototype = {
-  type: PropTypes.oneOf(['add', 'check']).is
+  type: PropTypes.oneOf(['add', 'check']).isRequired
 }
 
 const styles = StyleSheet.create({

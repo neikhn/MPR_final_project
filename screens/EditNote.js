@@ -16,14 +16,14 @@ export default function EditNote({ route }) {
   const [pressedButton, setPressedButton] = useState(null);
   const [bottomModalVisible, setBottomModalVisible] = useState(false);
   const [text, setText] = useState("");
-  const [note, setNote] = useState(null);
+  const [noteContent, setNoteContent] = useState("");
 
   useEffect(() => {
     const fetchedNote = NOTES.find((note) => note.id === id);
-    setNote(fetchedNote);
+    setNoteContent(fetchedNote);
   }, [id]);
 
-  if (!note) {
+  if (!noteContent) {
     return null; // or render a loading indicator
   }
 
@@ -37,7 +37,14 @@ export default function EditNote({ route }) {
 
   const isButtonPressed = (button) => pressedButton === button;
 
-  // Placeholder onPress functions
+  // Toggle bookmark status
+  const handleBookMarkPress = () => {
+    setNoteContent(prevNote => ({
+      ...prevNote,
+      isBookmarked: !prevNote.isBookmarked
+    }));
+  };
+
   const handleCopyToClipboard = () => {
     console.log("Copy to clipboard pressed");
   };
@@ -65,16 +72,20 @@ export default function EditNote({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.labelContainer}>
-        <LabelContainer note={note} />
+        <LabelContainer note={noteContent} />
       </View>
-      <TextScrollView content={note.content}/>
+      <TextScrollView content={noteContent.content} />
       <View style={styles.bottomTabMenu}>
         <Text style={styles.noteTime}>
-          {formatDistanceToNow(new Date(note.updateAt), { addSuffix: true })}
+          {formatDistanceToNow(new Date(noteContent.updateAt), {
+            addSuffix: true,
+          })}
         </Text>
-        <Pressable onPress={() => console.log("Bookmarked")}>
-          <Icon style={styles.bottomIcon} name="bookmark-outline" />
+
+        <Pressable onPress={handleBookMarkPress}>
+          <Icon style={styles.bottomIcon} name={noteContent.isBookmarked ? "bookmark" : "bookmark-outline"} />
         </Pressable>
+
         <Pressable onPress={() => setBottomModalVisible(true)}>
           <Icon style={styles.bottomIcon} name="ellipsis-vertical-outline" />
         </Pressable>
@@ -115,10 +126,8 @@ export default function EditNote({ route }) {
               />
             </View>
             <View style={styles.bottomModalLabel}>
-              <LabelContainer note={note}></LabelContainer>
-              <Pressable
-                style={styles.toManageLabel}
-              >
+              <LabelContainer note={noteContent}></LabelContainer>
+              <Pressable style={styles.toManageLabel}>
                 <Text style={styles.toManageLabelText}>+ Manage labels</Text>
               </Pressable>
             </View>
@@ -157,7 +166,7 @@ export default function EditNote({ route }) {
       </Modal>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -165,7 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   labelContainer: {
-    margin: 10
+    margin: 10,
   },
   bottomTabMenu: {
     flexDirection: "row",
@@ -204,24 +213,22 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   bottomModalLabel: {
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "center",
     marginBottom: 20,
   },
 
   toManageLabel: {
-    backgroundColor: "#d9d9d9",
-    padding: 10,
+    padding: 5,
     borderRadius: 5,
     flexWrap: "wrap",
-    marginTop: 5,
-    marginBottom: 10,
-    marginHorizontal: 5,
+    margin: 5,
+    alignSelf: "flex-start",
+    backgroundColor: "#d9d9d9",
   },
   toManageLabelText: {
-    color: "#000",
+    color: "black",
     fontSize: 12,
   },
   bottomColorContainer: {
