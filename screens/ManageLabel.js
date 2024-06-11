@@ -24,14 +24,13 @@ const ManageLabel = () => {
     };
 
     const handleCreateLabel = (label) => {
-        const newLabel = { id: `l${labels.length + 1}`, label: label, button: label };
+        const newLabel = { id: `l${labels.length + 1}`, label: label};
         const updatedLabels = [...labels, newLabel];
         setLabel(updatedLabels);
         setFilteredLabels(updatedLabels);
-    
+        
         // Update the dummy data
-        const updatedDummyLabels = [...LABELS, newLabel];
-        LABELS = updatedDummyLabels;
+        LABELS.push(label);
     };
 
     const handleSearch = (filteredLabels) => {

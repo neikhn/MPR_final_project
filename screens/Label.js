@@ -5,9 +5,9 @@ import LabelTag from "../components/LabelTag";
 import { LABELS, NOTES, TRASH } from "../data/dummy-data";
 
 const Label = () => {
-    const [labels, setLabel] = useState(LABELS);
-    const [notes, setNote] = useState(NOTES);
-    const [trash, setTrash] = useState(TRASH);
+    let [labels, setLabel] = useState(LABELS);
+    let [notes, setNote] = useState(NOTES);
+    let [trash, setTrash] = useState(TRASH);
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [pressedButton, setPressedButton] = useState(null);
     const [popUpModalVisible, setPopUpModalVisible] = useState(false);
@@ -41,32 +41,15 @@ const Label = () => {
         // Update notes and trash with the edited label
         const updatedNotes = notes.map(note => ({
             ...note,
-            labelIds: note.labelIds.includes(pressedButton) ? note.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId) : note.labelIds,
+            labelIds: note.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId)
         }));
         setNote(updatedNotes);
     
         const updatedTrash = trash.map(item => ({
             ...item,
-            labelIds: item.labelIds.includes(pressedButton) ? item.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId) : item.labelIds,
+            labelIds: item.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId)
         }));
         setTrash(updatedTrash);
-    
-        // Update the dummy data
-        const updatedDummyLabels = LABELS.map(label =>
-            label.id === pressedButton ? { ...label, label: tempLabelText } : label
-        );
-        const updatedDummyNotes = NOTES.map(note => ({
-            ...note,
-            labelIds: note.labelIds.includes(pressedButton) ? note.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId) : note.labelIds,
-        }));
-        const updatedDummyTrash = TRASH.map(item => ({
-            ...item,
-            labelIds: item.labelIds.includes(pressedButton) ? item.labelIds.map(labelId => labelId === pressedButton ? tempLabelText : labelId) : item.labelIds,
-        }));
-        // Update the dummy data
-        LABELS = updatedDummyLabels;
-        NOTES = updatedDummyNotes;
-        TRASH = updatedDummyTrash;
     
         setPopUpModalVisible(false);
         setPressedButton(null);
@@ -81,41 +64,28 @@ const Label = () => {
         // Remove the label from notes and trash
         const updatedNotes = notes.map(note => ({
             ...note,
-            labelIDs: note.labelIds.filter(labelId => labelId !== pressedButton),
+            labelIds: note.labelIds.filter(labelId => labelId !== pressedButton)
         }));
         setNote(updatedNotes);
     
         const updatedTrash = trash.map(item => ({
             ...item,
-            labelIDs: item.labelIds.filter(labelId => labelId !== pressedButton),
+            labelIds: item.labelIds.filter(labelId => labelId !== pressedButton)
         }));
         setTrash(updatedTrash);
     
-        // Update the dummy data
-        const updatedDummyLabels = LABELS.filter(label => label.id !== pressedButton);
-        const updatedDummyNotes = NOTES.map(note => ({
-            ...note,
-            labelIds: note.labelIds.filter(labelId => labelId !== pressedButton),
-        }));
-        const updatedDummyTrash = TRASH.map(item => ({
-            ...item,
-            labelIds: item.labelIds.filter(labelId => labelId !== pressedButton),
-        }));
-        // Update the dummy data
-        LABELS = updatedDummyLabels;
-        NOTES = updatedDummyNotes;
-        TRASH = updatedDummyTrash;
+        setPopUpModalVisible(false);
+        setPressedButton(null);
     };
 
     const handleCreateLabel = (label) => {
-        const newLabel = { id: `l${labels.length + 1}`, label: label, button: label };
+        const newLabel = { id: `l${labels.length + 1}`, label: label};
         const updatedLabels = [...labels, newLabel];
         setLabel(updatedLabels);
         setFilteredLabels(updatedLabels);
-    
+        
         // Update the dummy data
-        const updatedDummyLabels = [...LABELS, newLabel];
-        LABELS = updatedDummyLabels;
+        LABELS.push(label);
     };
 
     const handleSearch = (filteredLabels) => {

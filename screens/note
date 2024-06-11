@@ -1,0 +1,14 @@
+// In the parent component where navigation occurs
+<ManageLabel
+    labels={labels}
+    setLabel={setLabel}
+    notes={notes}
+    setNote={setNote}
+    trash={trash}
+    setTrash={setTrash}
+/>
+
+// In the ManageLabel component
+const ManageLabel = ({ labels, setLabel, notes, setNote, trash, setTrash }) => {
+    // Existing code...
+};
