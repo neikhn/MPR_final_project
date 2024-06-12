@@ -11,12 +11,11 @@ import BottomModalColor from "../components/bottomModalColor.js";
 import TextScrollView from "../components/TextScrollView.js";
 
 export default function EditNote({ route }) {
-  const { id } = route.params;
+  const { id, updateNote } = route.params;
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [pressedButton, setPressedButton] = useState(null);
   const [bottomModalVisible, setBottomModalVisible] = useState(false);
-  const [text, setText] = useState("");
-  const [noteContent, setNoteContent] = useState("");
+  const [noteContent, setNoteContent] = useState(null);
 
   useEffect(() => {
     const fetchedNote = NOTES.find((note) => note.id === id);
@@ -27,22 +26,35 @@ export default function EditNote({ route }) {
     return null; // or render a loading indicator
   }
 
-  const handlePressIn = (button) => {
-    setPressedButton(button);
-  };
-
-  const handlePressOut = () => {
-    setPressedButton(null);
-  };
-
-  const isButtonPressed = (button) => pressedButton === button;
-
   // Toggle bookmark status
   const handleBookMarkPress = () => {
-    setNoteContent(prevNote => ({
-      ...prevNote,
-      isBookmarked: !prevNote.isBookmarked
-    }));
+    setNoteContent((prevNote) => {
+      const updatedNote = {
+        ...prevNote,
+        isBookmarked: !prevNote.isBookmarked,
+      };
+      updateNoteInDummyData(updatedNote); // Update the note in the NOTES array
+      updateNote(updatedNote); // Call the updateNote function to update the note
+      return updatedNote;
+    });
+  };
+
+  const handleContentChange = (newContent) => {
+    setNoteContent((prevNote) => {
+      const updatedNote = {
+        ...prevNote,
+        content: newContent,
+      };
+      updateNoteInDummyData(updatedNote);
+      return updatedNote;
+    });
+  };
+
+  const updateNoteInDummyData = (updatedNote) => {
+    const noteIndex = NOTES.findIndex((note) => note.id === updatedNote.id);
+    if (noteIndex !== -1) {
+      NOTES[noteIndex] = updatedNote;
+    }
   };
 
   const handleCopyToClipboard = () => {
@@ -74,7 +86,7 @@ export default function EditNote({ route }) {
       <View style={styles.labelContainer}>
         <LabelContainer note={noteContent} />
       </View>
-      <TextScrollView content={noteContent.content} />
+      <TextScrollView content={noteContent.content} onContentChange={handleContentChange} />
       <View style={styles.bottomTabMenu}>
         <Text style={styles.noteTime}>
           {formatDistanceToNow(new Date(noteContent.updateAt), {
@@ -83,7 +95,10 @@ export default function EditNote({ route }) {
         </Text>
 
         <Pressable onPress={handleBookMarkPress}>
-          <Icon style={styles.bottomIcon} name={noteContent.isBookmarked ? "bookmark" : "bookmark-outline"} />
+          <Icon
+            style={styles.bottomIcon}
+            name={noteContent.isBookmarked ? "bookmark" : "bookmark-outline"}
+          />
         </Pressable>
 
         <Pressable onPress={() => setBottomModalVisible(true)}>
@@ -91,39 +106,17 @@ export default function EditNote({ route }) {
         </Pressable>
       </View>
 
-      <Modal
-        visible={bottomModalVisible}
-        animationType="slide"
-        transparent={true}
-      >
-        <Pressable
-          style={styles.bottomModalOverlay}
-          onPress={() => setBottomModalVisible(false)}
-        >
-          <View
-            style={styles.bottomModalContainer}
-            onStartShouldSetResponder={() => true}
-          >
+      <Modal visible={bottomModalVisible} animationType="slide" transparent={true}>
+        <Pressable style={styles.bottomModalOverlay} onPress={() => setBottomModalVisible(false)}>
+          <View style={styles.bottomModalContainer} onStartShouldSetResponder={() => true}>
             <View style={styles.bottomColorContainer}>
               <Pressable onPress={() => console.log("Set to no color")}>
                 <Icon style={styles.noColor} name="ban-outline"></Icon>
               </Pressable>
-              <BottomModalColor
-                onPress={() => console.log("Color pressed")}
-                backgroundColor="#24c731"
-              />
-              <BottomModalColor
-                onPress={() => console.log("Color pressed")}
-                backgroundColor="#b763ba"
-              />
-              <BottomModalColor
-                onPress={() => console.log("Color pressed")}
-                backgroundColor="#eb4034"
-              />
-              <BottomModalColor
-                onPress={() => console.log("Color pressed")}
-                backgroundColor="#a6bdde"
-              />
+              <BottomModalColor onPress={() => console.log("Color pressed")} backgroundColor="#24c731" />
+              <BottomModalColor onPress={() => console.log("Color pressed")} backgroundColor="#b763ba" />
+              <BottomModalColor onPress={() => console.log("Color pressed")} backgroundColor="#eb4034" />
+              <BottomModalColor onPress={() => console.log("Color pressed")} backgroundColor="#a6bdde" />
             </View>
             <View style={styles.bottomModalLabel}>
               <LabelContainer note={noteContent}></LabelContainer>
@@ -131,36 +124,12 @@ export default function EditNote({ route }) {
                 <Text style={styles.toManageLabelText}>+ Manage labels</Text>
               </Pressable>
             </View>
-            <BottomPressable
-              iconName="clipboard-outline"
-              text="Copy to clipboard"
-              onPress={handleCopyToClipboard}
-            />
-            <BottomPressable
-              iconName="share-social-outline"
-              text="Share"
-              onPress={handleShare}
-            />
-            <BottomPressable
-              iconName="trash-outline"
-              text="Trash"
-              onPress={handleTrash}
-            />
-            <BottomPressable
-              iconName="copy-outline"
-              text="Make a copy"
-              onPress={handleMakeACopy}
-            />
-            <BottomPressable
-              iconName="pin-outline"
-              text="Pin"
-              onPress={handlePin}
-            />
-            <BottomPressable
-              iconName="alarm-outline"
-              text="Add a reminder"
-              onPress={handleAddReminder}
-            />
+            <BottomPressable iconName="clipboard-outline" text="Copy to clipboard" onPress={handleCopyToClipboard} />
+            <BottomPressable iconName="share-social-outline" text="Share" onPress={handleShare} />
+            <BottomPressable iconName="trash-outline" text="Trash" onPress={handleTrash} />
+            <BottomPressable iconName="copy-outline" text="Make a copy" onPress={handleMakeACopy} />
+            <BottomPressable iconName="pin-outline" text="Pin" onPress={handlePin} />
+            <BottomPressable iconName="alarm-outline" text="Add a reminder" onPress={handleAddReminder} />
           </View>
         </Pressable>
       </Modal>
