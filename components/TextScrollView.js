@@ -42,5 +42,5 @@ const styles = StyleSheet.create({
   },
   inputText: {
     fontSize: 16,
-  }
+  },
 });

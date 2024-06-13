@@ -21,10 +21,20 @@ export default function ActionButton({ type, onPress }) {
       </View>
     )
   }
+
+  if (type === 'forward') {
+    return (
+      <View style={styles.forwardContainer}>
+        <Pressable onPress={onPress}>
+          <Icon style={styles.content} name="chevron-forward-outline" />
+        </Pressable>
+      </View>
+    )
+  }
 }
 
 ActionButton.prototype = {
-  type: PropTypes.oneOf(['add', 'check']).isRequired
+  type: PropTypes.oneOf(['add', 'check', 'forward']).isRequired
 }
 
 const styles = StyleSheet.create({
@@ -42,5 +52,11 @@ const styles = StyleSheet.create({
   content: {
     color: "white",
     fontSize: 50,
+  },
+  forwardContainer: {
+    width: 60,
+    aspectRatio: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
