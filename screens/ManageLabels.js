@@ -74,7 +74,6 @@ const ManageLabel = ({ route, navigation }) => {
     };
 
     const handleSearch = (query) => {
-        const filtered = labels.filter(label => label.label.toLowerCase().includes(query.toLowerCase()));
         setFilteredLabels(filtered);
     };
 
