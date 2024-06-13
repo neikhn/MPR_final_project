@@ -20,7 +20,7 @@ LabelTag.propTypes = {
   label: PropTypes.shape({
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
   onPress: PropTypes.func,
   isPressable: PropTypes.bool,
 };
@@ -41,17 +41,3 @@ const styles = StyleSheet.create({
 });
 
 export default LabelTag;
-
-// const LabelTag = ({
-//   text,
-//   backgroundColor,
-//   textColor,
-//   onPress,
-//   isPressable,
-// }) => {
-//   return (
-//     <Pressable onPress={onPress} style={[styles.tag, { backgroundColor }]}>
-//       <Text style={[styles.text, { color: textColor }]}>{text}</Text>
-//     </Pressable>
-//   );
-// };
