@@ -55,6 +55,17 @@ export default function EditNote({ route, navigation }) {
     }
   };
 
+  const handleColorSelection = (color) => {
+    setNoteContent((prevNote) => {
+        const updatedNote = {
+            ...prevNote,
+            color: color, // Assuming your noteContent has a 'color' property
+        };
+        updateNoteInDummyData(updatedNote);
+        return updatedNote;
+    });
+};
+
   const handleToManageLabel = (item) => {
     navigation.navigate('Manage labels', {
       id: item.id,
@@ -121,13 +132,10 @@ export default function EditNote({ route, navigation }) {
         <Pressable style={styles.bottomModalOverlay} onPress={() => setBottomModalVisible(false)}>
           <View style={styles.bottomModalContainer} onStartShouldSetResponder={() => true}>
             <View style={styles.bottomColorContainer}>
-              <Pressable onPress={() => console.log("Set to no color")}>
-                <Icon style={styles.noColor} name="ban-outline"></Icon>
-              </Pressable>
-              <BottomModalColor onPress={() => console.log("Color pressed")} backgroundColor="#24c731" />
-              <BottomModalColor onPress={() => console.log("Color pressed")} backgroundColor="#b763ba" />
-              <BottomModalColor onPress={() => console.log("Color pressed")} backgroundColor="#eb4034" />
-              <BottomModalColor onPress={() => console.log("Color pressed")} backgroundColor="#a6bdde" />
+              <BottomModalColor
+                onPress={handleColorSelection }
+                selectedColor={noteContent.color}
+              />
             </View>
             <View style={styles.bottomModalLabel}>
               <LabelContainer note={noteContent}></LabelContainer>
