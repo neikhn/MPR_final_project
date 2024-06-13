@@ -73,8 +73,8 @@ const ManageLabel = ({ route, navigation }) => {
         LABELS.push(newLabel);
     };
 
-    const handleSearch = (query) => {
-        setFilteredLabels(filtered);
+    const handleSearch = (filteredLabels) => {
+        setFilteredLabels(filteredLabels);
     };
 
     return (
