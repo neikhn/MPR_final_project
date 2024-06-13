@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { NOTES } from "../data/dummy-data";
 import NoteContainer from "../components/NoteContainer";
@@ -10,10 +11,11 @@ export default function Home({ navigation }) {
   function renderNoteItem({ item }) {
     function noteContainerPressHandler() {
       navigation.navigate("Edit note", {
-        id: item.id, updateNote: updateNote // Pass the updateNote function to the EditNote component
+        id: item.id,
+        updateNote: updateNote, // Pass the updateNote function
       });
     }
-
+  
     return (
       <NoteContainer note={item} onPress={noteContainerPressHandler} />
     );
@@ -25,7 +27,7 @@ export default function Home({ navigation }) {
 
   // Function to update the NOTES array
   function updateNote(updatedNote) {
-    const updatedNotes = notes.map(note =>
+    const updatedNotes = notes.map((note) =>
       note.id === updatedNote.id ? updatedNote : note
     );
     setNotes(updatedNotes);

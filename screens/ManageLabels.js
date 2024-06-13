@@ -4,13 +4,12 @@ import Search from "../components/Search";
 import LabelTag from "../components/LabelTag";
 import { LABELS, NOTES, TRASH } from "../data/dummy-data";
 
-const ManageLabel = () => {
+const ManageLabel = ({ notes, setNote, trash, setTrash }) => {
     const [labels, setLabel] = useState(LABELS);
-    const [notes, setNote] = useState(NOTES);
-    const [trash, setTrash] = useState(TRASH);
+    [notes, setNote] = useState(NOTES);
+    [trash, setTrash] = useState(TRASH);
     const [filteredLabels, setFilteredLabels] = useState(labels);
     const [selectedLabels, setSelectedLabels] = useState([]);
-
 
     const handleToggleLabel = (labelId) => {
         setSelectedLabels(prevSelected => {
