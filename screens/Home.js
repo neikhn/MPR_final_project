@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { NOTES } from "../data/dummy-data";
 import NoteContainer from "../components/NoteContainer";
@@ -8,11 +7,20 @@ import ActionButton from "../components/ActionButton";
 export default function Home({ navigation }) {
   const [notes, setNotes] = useState(NOTES);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Update notes state to trigger re-render
+      setNotes(NOTES.slice()); // Copying array to trigger state update
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   function renderNoteItem({ item }) {
     function noteContainerPressHandler() {
       navigation.navigate("Edit note", {
         id: item.id,
-        updateNote: updateNote, // Pass the updateNote function
+        updateNote: updateNote,
       });
     }
   
@@ -25,7 +33,6 @@ export default function Home({ navigation }) {
     navigation.navigate("New note");
   }
 
-  // Function to update the NOTES array
   function updateNote(updatedNote) {
     const updatedNotes = notes.map((note) =>
       note.id === updatedNote.id ? updatedNote : note
@@ -36,9 +43,10 @@ export default function Home({ navigation }) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={notes} // Use the updated notes array
-        keyExtractor={(noteItem) => noteItem.id}
+        data={notes}
+        keyExtractor={(item) => item.id}
         renderItem={renderNoteItem}
+        extraData={notes} // Ensure re-render on state change
       />
       <ActionButton type="add" onPress={newNotePressHandler} />
     </View>

@@ -1,25 +1,49 @@
 import { StyleSheet, View, AppRegistry } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Search from "../components/Search";
 import LabelTag from "../components/LabelTag";
-import { LABELS, NOTES, TRASH } from "../data/dummy-data";
+import { LABELS, NOTES } from "../data/dummy-data";
 
-const ManageLabel = ({ notes, setNote, trash, setTrash }) => {
+const ManageLabel = ({ route, navigation }) => {
+    const { id, updateLabels } = route.params;
     const [labels, setLabel] = useState(LABELS);
-    [notes, setNote] = useState(NOTES);
-    [trash, setTrash] = useState(TRASH);
+    const [notes, setNotes] = useState(NOTES);
     const [filteredLabels, setFilteredLabels] = useState(labels);
     const [selectedLabels, setSelectedLabels] = useState([]);
 
+    useEffect(() => {
+        const note = notes.find((note) => note.id === id);
+        if (note) {
+            setSelectedLabels(note.labelIds || []);
+        }
+    }, [id, notes]);
+
     const handleToggleLabel = (labelId) => {
-        setSelectedLabels(prevSelected => {
-            if (prevSelected.includes(labelId)) {
-                // If label is already selected, remove it
-                return prevSelected.filter(id => id !== labelId);
-            } else {
-                // If label is not selected, add it
-                return [...prevSelected, labelId];
+        setSelectedLabels((prevSelectedLabels) => {
+            const isSelected = prevSelectedLabels.includes(labelId);
+            const updatedSelectedLabels = isSelected
+                ? prevSelectedLabels.filter((id) => id !== labelId)
+                : [...prevSelectedLabels, labelId];
+
+            // Update labels in the parent component
+            updateLabels(updatedSelectedLabels);
+
+            // Update labels in the dummy data
+            const updatedNotes = notes.map((note) => {
+                if (note.id === id) {
+                    return { ...note, labelIds: updatedSelectedLabels };
+                }
+                return note;
+            });
+
+            // Directly modify the dummy data
+            const noteIndex = NOTES.findIndex((note) => note.id === id);
+            if (noteIndex !== -1) {
+                NOTES[noteIndex].labelIds = updatedSelectedLabels;
             }
+
+            setNotes(updatedNotes);
+            return updatedSelectedLabels;
         });
     };
 
@@ -28,38 +52,30 @@ const ManageLabel = ({ notes, setNote, trash, setTrash }) => {
     };
 
     const handleCreateLabel = (label) => {
-        // Check if the label is empty or consists only of whitespace
         if (!label.trim()) {
-            // If the label is empty, return without creating a new label
             return;
         }
-                
-        // Find the maximum ID among existing labels
+
         const maxId = labels.reduce((max, existingLabel) => {
-            // Check if the existing label has a valid id property
             if (existingLabel.id && typeof existingLabel.id === 'string') {
                 const labelIdNumber = parseInt(existingLabel.id.substring(1));
                 return labelIdNumber > max ? labelIdNumber : max;
             }
             return max;
         }, 0);
-    
-        // Generate a new label ID based on the maximum ID
+
         const newId = `l${maxId + 1}`;
-    
         const newLabel = { id: newId, label: label };
         const updatedLabels = [...labels, newLabel];
-        
-        // Update the state variable for both screens
+
         setLabel(updatedLabels);
         setFilteredLabels(updatedLabels);
-    
-        // Update the dummy data
         LABELS.push(newLabel);
     };
-    
-    const handleSearch = (filteredLabels) => {
-        setFilteredLabels(filteredLabels);
+
+    const handleSearch = (query) => {
+        const filtered = labels.filter(label => label.label.toLowerCase().includes(query.toLowerCase()));
+        setFilteredLabels(filtered);
     };
 
     return (

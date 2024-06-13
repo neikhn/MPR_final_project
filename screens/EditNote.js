@@ -5,13 +5,12 @@ import LabelContainer from "../components/LabelContainer";
 import { NOTES } from "../data/dummy-data";
 
 import Icon from "react-native-vector-icons/Ionicons";
-import LabelTag from "../components/LabelTag.js";
 import BottomPressable from "../components/bottomModelPressable.js";
 import BottomModalColor from "../components/bottomModalColor.js";
 import TextScrollView from "../components/TextScrollView.js";
 
-export default function EditNote({ route }) {
-  const { id, updateNote } = route.params;
+export default function EditNote({ route, navigation }) {
+  const { id } = route.params;
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [pressedButton, setPressedButton] = useState(null);
   const [bottomModalVisible, setBottomModalVisible] = useState(false);
@@ -34,7 +33,6 @@ export default function EditNote({ route }) {
         isBookmarked: !prevNote.isBookmarked,
       };
       updateNoteInDummyData(updatedNote); // Update the note in the NOTES array
-      updateNote(updatedNote); // Call the updateNote function to update the note
       return updatedNote;
     });
   };
@@ -56,6 +54,19 @@ export default function EditNote({ route }) {
       NOTES[noteIndex] = updatedNote;
     }
   };
+
+  const handleToManageLabel = (item) => {
+    navigation.navigate('Manage labels', {
+      id: item.id,
+      updateLabels: (updatedLabels) => {
+        setNoteContent((prevNote) => {
+          const updatedNote = { ...prevNote, labels: updatedLabels };
+          updateNoteInDummyData(updatedNote);
+          return updatedNote;
+        });
+      },
+    });
+  }
 
   const handleCopyToClipboard = () => {
     console.log("Copy to clipboard pressed");
@@ -120,7 +131,7 @@ export default function EditNote({ route }) {
             </View>
             <View style={styles.bottomModalLabel}>
               <LabelContainer note={noteContent}></LabelContainer>
-              <Pressable style={styles.toManageLabel}>
+              <Pressable style={styles.toManageLabel} onPress={() => handleToManageLabel(noteContent)} >
                 <Text style={styles.toManageLabelText}>+ Manage labels</Text>
               </Pressable>
             </View>
