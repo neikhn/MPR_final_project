@@ -8,6 +8,7 @@ import NewNote from "./screens/NewNote.js";
 import EditNote from './screens/EditNote.js';
 import ManageLabels from './screens/ManageLabels';
 import LabelManager from './components/LabelManager';
+import Trash from './screens/Trash.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +21,8 @@ export default function App() {
           <Stack.Screen name="New note" component={NewNote} />
           <Stack.Screen name="Edit note" component={EditNote} /> 
           <Stack.Screen name="Manage labels" component={ManageLabels} />
-          <Stack.Screen name="Labels" component={Labels} /> 
+          <Stack.Screen name="Labels" component={Labels} />
+          <Stack.Screen name="Trash" component={Trash} />
         </Stack.Navigator>
       </LabelManager>
     </NavigationContainer>
