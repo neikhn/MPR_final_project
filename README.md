@@ -6,14 +6,11 @@ In this project, you will build a sleek and efficient note management app. Users
 
 🛠️ Starting Guide
 1. Change Directory
-First, navigate to the project folder:
-cd ../MPR_final_project/
+First, navigate to the project folder: cd ../MPR_final_project/
 2. Install Dependencies
-Next, install all the required dependencies:
--npm install
+Next, install all the required dependencies: npm install
 3. Run the Project
-Finally, start the project:
--npm start
+Finally, start the project: npm start
 📱 Features
 Create Notes: Easily create new notes with a user-friendly interface.
 Edit Notes: Modify existing notes to keep information up-to-date.
