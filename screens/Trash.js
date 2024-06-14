@@ -21,7 +21,7 @@ export default function Home({ navigation }) {
         if (selectedNote) {
             const index = TRASH.findIndex((item) => item.id === selectedNote.id);
             if (index !== -1) {
-                NOTES.push(TRASH[index]); // Add to NOTES
+                NOTES.unshift(TRASH[index]); // Add to NOTES
                 TRASH.splice(index, 1); // Remove from TRASH
                 setTrash(TRASH.slice()); // Update state
             }
@@ -41,7 +41,7 @@ export default function Home({ navigation }) {
     }
 
     function handleRestoreAll() {
-        NOTES.push(...TRASH); // Move all from TRASH to NOTES
+        NOTES.unshift(...TRASH); // Move all from TRASH to NOTES
         TRASH.length = 0; // Clear TRASH
         setTrash(TRASH.slice()); // Update state
     }

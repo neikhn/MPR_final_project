@@ -174,7 +174,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 10,
-    marginHorizontal: 4,
     backgroundColor: "#d9d9d9",
     width: "100%",
     position: "absolute",
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1,
-    borderWidth: 1,
+    borderTopWidth: 1,
     borderColor: "#000",
   },
   bottomText: {

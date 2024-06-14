@@ -52,7 +52,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Drawer" component={MainDrawerNavigator} />
+        <Stack.Screen name="Drawer" options={{ headerShown: false }} component={MainDrawerNavigator} />
         <Stack.Screen name="New note" component={NewNote} />
         <Stack.Screen name="Manage labels" component={ManageLabels} />
         <Stack.Screen name="Edit note" component={EditNote} />
