@@ -2,7 +2,7 @@ import { StyleSheet, Pressable, View, Text, Modal } from "react-native";
 import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import LabelContainer from "../components/LabelContainer";
-import { NOTES } from "../data/dummy-data";
+import { NOTES, TRASH } from "../data/dummy-data";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import BottomPressable from "../components/bottomModelPressable.js";
@@ -88,9 +88,13 @@ export default function EditNote({ route, navigation }) {
   };
 
   const handleTrash = () => {
-    console.log("Trash pressed");
+    const noteIndex = NOTES.findIndex((note) => note.id === noteContent.id);
+    if (noteIndex !== -1) {
+      const noteToTrash = NOTES.splice(noteIndex, 1)[0]; // Remove from NOTES
+      TRASH.push(noteToTrash); // Add to TRASH
+      navigation.goBack(); // Navigate back after moving to trash
+    }
   };
-
   const handleMakeACopy = () => {
     console.log("Make a copy pressed");
   };

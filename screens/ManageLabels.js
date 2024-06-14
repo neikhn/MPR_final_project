@@ -69,13 +69,14 @@ const ManageLabel = ({ route, navigation }) => {
         const updatedLabels = [...labels, newLabel];
 
         setLabel(updatedLabels);
-        setFilteredLabels(updatedLabels);
+        setFilteredLabels(updatedLabels);   
         LABELS.push(newLabel);
     };
 
     const handleSearch = (filteredLabels) => {
         setFilteredLabels(filteredLabels);
     };
+
 
     return (
         <View style={styles.container}>
